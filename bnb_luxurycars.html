@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BNB LuxuryCars — Location de véhicules sportifs et premium à Lyon</title>
+<meta name="description" content="BNB LuxuryCars, agence de location de véhicules sportifs et premium à Lyon. Audi RS3, RS4, RSQ8, VW Golf R. Réservation rapide, service haut de gamme.">
+<meta property="og:title" content="BNB LuxuryCars — Location premium à Lyon">
+<meta property="og:description" content="Louez un véhicule sportif et premium à Lyon. RS3, RS4, RSQ8, Golf R. Service d'exception 7j/7.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#060606;
+  --surface:#0e0e0e;
+  --surface2:#141414;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.12);
+  --silver:#8a8a8a;
+  --silver2:#505050;
+  --white:#fff;
+  --accent:#fff;
+  --snap:#FFFC00;
+  --red:#c41a1a;
+  --ease:cubic-bezier(.25,.8,.25,1);
+  --ease2:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+
+/* ═══ RACE TRACK CANVAS (global background layer) ═══ */
+#race-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35}
+
+/* ═══ SPEED LINES overlay ═══ */
+.speed-lines{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.speed-lines::before{
+  content:'';position:absolute;top:0;left:-100%;width:300%;height:100%;
+  background:repeating-linear-gradient(90deg,transparent 0,transparent 80px,rgba(255,255,255,.012) 80px,rgba(255,255,255,.012) 81px);
+  animation:speedShift 18s linear infinite;
+}
+.speed-lines::after{
+  content:'';position:absolute;top:0;left:-200%;width:400%;height:100%;
+  background:repeating-linear-gradient(90deg,transparent 0,transparent 120px,rgba(255,255,255,.007) 120px,rgba(255,255,255,.007) 121px);
+  animation:speedShift 28s linear infinite reverse;
+}
+@keyframes speedShift{from{transform:translateX(0)}to{transform:translateX(33.33%)}}
+
+/* ═══ ASPHALT TEXTURE ═══ */
+.asphalt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");}
+
+/* ═══ HEADER ═══ */
+#hdr{position:fixed;top:0;left:0;width:100%;z-index:900;padding:0 5%;transition:.5s var(--ease)}
+#hdr.solid{background:rgba(6,6,6,.95);backdrop-filter:blur(28px);border-bottom:1px solid var(--border)}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+
+/* Logo */
+.logo{display:flex;flex-direction:column;line-height:1}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.12em;color:#fff}
+.logo-main span{color:rgba(255,255,255,.3)}
+.logo-sub{font-size:.48rem;font-weight:500;letter-spacing:.5em;text-transform:uppercase;color:var(--silver2);margin-top:2px;font-family:'Barlow Condensed',sans-serif}
+
+.hdr-nav{display:flex;gap:2.8rem}
+.hdr-nav a{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);transition:color .3s;position:relative}
+.hdr-nav a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:#fff;transition:width .3s}
+.hdr-nav a:hover{color:#fff}
+.hdr-nav a:hover::after{width:100%}
+
+.hdr-actions{display:flex;align-items:center;gap:.6rem}
+.btn-snap{display:inline-flex;align-items:center;gap:.4rem;background:var(--snap);color:#000;padding:.42rem .9rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;transition:opacity .3s;cursor:pointer}
+.btn-snap:hover{opacity:.82}
+.btn-snap svg{width:14px;height:14px;flex-shrink:0}
+.btn-res{background:#fff;color:#000;padding:.44rem 1.1rem;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;transition:.3s}
+.btn-res:hover{background:#d8d8d8}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.burger span{display:block;width:22px;height:1.5px;background:#fff;transition:.3s}
+
+#mnav{display:none;position:fixed;inset:68px 0 0 0;background:rgba(6,6,6,.98);backdrop-filter:blur(20px);z-index:899;flex-direction:column;padding:3rem 6%;gap:2rem;border-top:1px solid var(--border)}
+#mnav.on{display:flex}
+#mnav a{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.08em;color:rgba(255,255,255,.6);padding-bottom:1.5rem;border-bottom:1px solid var(--border);transition:color .3s}
+#mnav a:hover{color:#fff}
+
+/* ═══ HERO ═══ */
+#hero{position:relative;height:100vh;min-height:660px;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://uploads.audi-mediacenter.com/system/production/media/112899/images/4186533e438d4c7857b07c470f9720a7ccc5e934/A225631_web_1440.jpeg?1698516776') center 40%/cover no-repeat;transform:scale(1.08);transition:transform 9s ease}
+#hero.rdy .hero-bg{transform:scale(1)}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,6,.55) 0%,rgba(6,6,6,0) 25%,rgba(6,6,6,.6) 65%,rgba(6,6,6,1) 100%);z-index:1}
+.hero-grad2{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,6,6,.7) 0%,rgba(6,6,6,.1) 60%,transparent 100%);z-index:1}
+
+/* Pit lane start line across hero */
+.start-line{position:absolute;bottom:0;left:0;width:100%;height:6px;z-index:3;overflow:hidden}
+.start-line-inner{display:flex;height:100%;width:100%}
+.start-block{flex:1;height:100%}
+.start-block:nth-child(odd){background:#fff}
+.start-block:nth-child(even){background:#000}
+
+/* Animated speed streak */
+.hero-streak{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;overflow:hidden;pointer-events:none}
+.hero-streak::before{
+  content:'';position:absolute;top:35%;left:-60%;width:80%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),rgba(255,255,255,.4),rgba(255,255,255,.15),transparent);
+  animation:streakMove 5s ease-in-out infinite 1.5s;
+}
+.hero-streak::after{
+  content:'';position:absolute;top:55%;left:-40%;width:50%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),rgba(255,255,255,.25),transparent);
+  animation:streakMove 7s ease-in-out infinite 3s;
+}
+@keyframes streakMove{
+  0%{left:-80%;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{left:120%;opacity:0}
+}
+
+.hero-cnt{position:relative;z-index:4;padding:0 6% 8rem;max-width:880px;opacity:0;transform:translateY(30px);transition:opacity 1s .3s,transform 1s .3s var(--ease2)}
+#hero.rdy .hero-cnt{opacity:1;transform:translateY(0)}
+
+.hero-overline{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.55em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.6rem;display:flex;align-items:center;gap:1rem}
+.hero-overline::before{content:'';width:32px;height:1px;background:rgba(255,255,255,.35);flex-shrink:0}
+
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,7.5vw,7.5rem);line-height:.95;letter-spacing:.04em;margin-bottom:1.5rem}
+.hero-h1 .line2{color:rgba(255,255,255,.22)}
+.hero-h1 .line3{color:rgba(255,255,255,.12)}
+
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.45);font-weight:300;line-height:2;max-width:460px;margin-bottom:2.5rem;font-family:'Barlow',sans-serif}
+
+.hero-pills{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:3rem}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:.5rem}
+.pill i{font-size:.72rem;color:rgba(255,255,255,.45)}
+.pill::before{content:'';width:4px;height:4px;background:rgba(255,255,255,.2);border-radius:50%}
+
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.hb-solid{background:#fff;color:#000;padding:.9rem 2.4rem;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
+.hb-solid::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.08);transform:translateX(-101%);transition:transform .3s}
+.hb-solid:hover::after{transform:translateX(0)}
+.hb-ghost{border:1px solid rgba(255,255,255,.2);color:#fff;padding:.9rem 2.4rem;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;transition:.3s;cursor:pointer}
+.hb-ghost:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.04)}
+
+.scroll-hint{position:absolute;bottom:3.5rem;right:6%;z-index:4;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:.3;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase}
+.scroll-hint i{animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ═══ STAT BAR ═══ */
+#statbar{background:var(--surface);border-bottom:1px solid var(--border);border-top:1px solid var(--border);position:relative;overflow:hidden}
+#statbar .speed-lines{opacity:.5}
+.statbar-inner{display:flex;justify-content:space-around;padding:2rem 6%;position:relative;z-index:2}
+.stat-item{text-align:center}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.04em;color:#fff;line-height:1}
+.stat-l{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--silver2);margin-top:.3rem}
+.stat-div{width:1px;background:var(--border2);align-self:stretch;margin:0 1rem}
+
+/* ═══ SECTIONS ═══ */
+section{padding:6.5rem 6%;position:relative;z-index:2}
+.lbl{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.5em;text-transform:uppercase;color:var(--silver2);margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem}
+.lbl::before{content:'';width:24px;height:1px;background:var(--silver2)}
+.sh{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,4.5vw,4.5rem);letter-spacing:.04em;line-height:1;margin-bottom:1rem}
+.sh em{font-style:normal;color:rgba(255,255,255,.2)}
+.sd{font-size:.85rem;color:rgba(255,255,255,.35);line-height:2;font-weight:300;max-width:480px;font-family:'Barlow',sans-serif}
+
+/* ═══ FLEET ═══ */
+#fleet{background:var(--surface);overflow:hidden}
+/* Circuit marking line across fleet top */
+#fleet::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,#fff 0,#fff 20px,#000 20px,#000 40px);opacity:.06}
+
+.fleet-hdr{margin-bottom:4rem}
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;background:rgba(255,255,255,.04)}
+
+.car{background:var(--bg);overflow:hidden;position:relative;transition:transform .45s var(--ease2)}
+.car:hover{transform:translateY(-6px);z-index:2}
+.car-img-w{overflow:hidden;position:relative;height:240px}
+.car-img-w img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease,filter .4s;filter:brightness(.9)}
+.car:hover .car-img-w img{transform:scale(1.06);filter:brightness(1)}
+
+/* Tire mark overlay on car image */
+.car-img-w::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 65%,rgba(0,0,0,.7));
+  pointer-events:none;
+}
+
+.price-tag{position:absolute;top:0;right:0;background:#fff;color:#000;padding:.35rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.08em;z-index:2}
+.car-body{padding:2rem}
+.car-badge{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.5rem}
+.car-name{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.06em;margin-bottom:.5rem;line-height:1}
+.car-desc{font-size:.8rem;color:rgba(255,255,255,.38);line-height:1.85;margin-bottom:1.6rem;font-weight:300}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.5rem}
+.spec-l{font-family:'Barlow Condensed',sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--silver2);margin-bottom:.15rem}
+.spec-v{font-size:.82rem;font-weight:500}
+.sep{height:1px;background:var(--border);margin-bottom:1.5rem}
+.btn-book{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;text-align:center;background:transparent;border:1px solid rgba(255,255,255,.12);color:#fff;padding:.8rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:.3s;border-radius:1px;position:relative;overflow:hidden}
+.btn-book::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.04);transform:translateX(-101%);transition:transform .35s}
+.btn-book:hover::before{transform:translateX(0)}
+.btn-book:hover{border-color:rgba(255,255,255,.35)}
+
+/* ═══ WHY ═══ */
+#why{background:var(--bg)}
+/* Tyre tread horizontal line */
+#why::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0,rgba(255,255,255,.06) 15px,transparent 15px,transparent 30px)}
+
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:rgba(255,255,255,.04);margin-top:4rem}
+.why-item{background:var(--bg);padding:2.5rem 2rem;border-top:2px solid transparent;transition:.4s;position:relative;overflow:hidden}
+.why-item::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(255,255,255,.02) 0,transparent 60%);opacity:0;transition:opacity .4s}
+.why-item:hover{background:var(--surface2);border-top-color:rgba(255,255,255,.18)}
+.why-item:hover::before{opacity:1}
+.wi-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(255,255,255,.04);line-height:1;margin-bottom:.8rem}
+.wi-icon{width:36px;height:36px;color:rgba(255,255,255,.45);margin-bottom:1.3rem}
+.why-item h3{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.7rem}
+.why-item p{font-size:.8rem;color:rgba(255,255,255,.35);line-height:1.85;font-weight:300}
+
+/* ═══ PROCESS ═══ */
+#process{background:var(--surface);overflow:hidden}
+/* Start line grid top */
+#process::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;display:block;background:repeating-linear-gradient(90deg,#fff 0,#fff 30px,transparent 30px,transparent 60px);opacity:.04}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);margin-top:4.5rem;position:relative}
+.steps::before{content:'';position:absolute;top:50px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.08) 80%,transparent);z-index:0}
+.step{padding:2.5rem 2rem;text-align:center;position:relative;z-index:1}
+.step-n{font-family:'Bebas Neue',sans-serif;font-size:5rem;color:rgba(255,255,255,.03);line-height:1;margin-bottom:.5rem}
+.step-ico{font-size:1.3rem;color:rgba(255,255,255,.3);margin-bottom:1rem}
+.step h3{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.55rem}
+.step p{font-size:.78rem;color:rgba(255,255,255,.35);line-height:1.85;font-weight:300}
+.step-dot{width:8px;height:8px;border:1px solid rgba(255,255,255,.15);border-radius:50%;margin:0 auto 1.5rem;position:relative}
+.step-dot::before{content:'';position:absolute;inset:2px;background:rgba(255,255,255,.15);border-radius:50%}
+
+/* ═══ GALLERY ═══ */
+#gallery{background:var(--bg);padding:6.5rem 0;overflow:hidden}
+.gal-hdr{padding:0 6%;margin-bottom:3.5rem}
+.gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:280px 220px;gap:2px}
+.gi{overflow:hidden;cursor:pointer;position:relative}
+.gi:first-child{grid-column:span 2;grid-row:span 2}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .45s}
+.gi:hover img{transform:scale(1.08);filter:brightness(.55)}
+.gi-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s;background:rgba(0,0,0,.2)}
+.gi:hover .gi-ov{opacity:1}
+.gi-ov i{font-size:1.3rem;color:rgba(255,255,255,.7)}
+/* Gallery label overlays */
+.gi-lbl{position:absolute;bottom:.9rem;left:1rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);z-index:2;transition:color .35s}
+.gi:hover .gi-lbl{color:rgba(255,255,255,.8)}
+
+/* Lightbox */
+#lb{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.97);align-items:center;justify-content:center}
+#lb.on{display:flex}
+#lb img{max-width:90vw;max-height:86vh;object-fit:contain;border:1px solid rgba(255,255,255,.08)}
+#lb-x{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.4rem;cursor:pointer;transition:color .3s}
+#lb-x:hover{color:#fff}
+
+/* ═══ RESERVATION ═══ */
+#reservation{background:var(--surface)}
+.resa-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:start}
+.price-table{margin-top:2.5rem;border:1px solid var(--border)}
+.pt-row{display:flex;justify-content:space-between;padding:.95rem 1.3rem;border-bottom:1px solid var(--border);font-size:.85rem;transition:background .3s}
+.pt-row:hover{background:rgba(255,255,255,.025)}
+.pt-row:last-child{border-bottom:none}
+.pt-row span:first-child{color:rgba(255,255,255,.38);font-family:'Barlow',sans-serif}
+.pt-row span:last-child{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.06em}
+.resa-box{background:var(--bg);border:1px solid var(--border);padding:2.5rem}
+.fg{margin-bottom:1.3rem}
+.fg label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--silver2);margin-bottom:.55rem}
+.fg select,.fg input{width:100%;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);color:#fff;padding:.88rem 1rem;font-size:.87rem;font-family:'Barlow',sans-serif;outline:none;transition:border-color .3s;border-radius:1px;-webkit-appearance:none;appearance:none}
+.fg select:focus,.fg input:focus{border-color:rgba(255,255,255,.25)}
+.fg select option{background:var(--surface2)}
+.resa-sum{background:rgba(255,255,255,.02);border:1px solid var(--border);padding:1.5rem;margin-top:1.5rem}
+.resa-sum h4{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--silver2);margin-bottom:1.2rem}
+.sum-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.85rem}
+.sum-row:last-child{border-bottom:none;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;padding-top:.85rem;letter-spacing:.04em}
+.sum-row span:first-child{color:rgba(255,255,255,.38)}
+.btn-resa{width:100%;margin-top:1.5rem;background:#fff;color:#000;border:none;padding:1.05rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:.3s;border-radius:1px}
+.btn-resa:hover{background:#d8d8d8}
+
+/* ═══ REVIEWS ═══ */
+#reviews{background:var(--bg)}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:rgba(255,255,255,.04);margin-top:4rem}
+.rv{background:var(--bg);padding:2.2rem;transition:.35s;position:relative;overflow:hidden}
+.rv::before{content:'"';position:absolute;top:.5rem;right:1.5rem;font-family:'Bebas Neue',sans-serif;font-size:8rem;color:rgba(255,255,255,.025);line-height:1;pointer-events:none}
+.rv:hover{background:var(--surface2)}
+.rv-stars{color:#b8922a;font-size:.68rem;margin-bottom:1.1rem;letter-spacing:.12em}
+.rv-txt{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.9;font-style:italic;font-weight:300;margin-bottom:1.5rem;position:relative;z-index:1}
+.rv-auth{display:flex;align-items:center;gap:.8rem}
+.rv-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;color:var(--silver2)}
+.rv-name{font-size:.82rem;font-weight:600}
+.rv-car{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver2);margin-top:.1rem}
+
+/* ═══ FAQ ═══ */
+#faq{background:var(--surface)}
+.faq-wrap{margin-top:3.5rem;max-width:800px}
+.fi{border-bottom:1px solid var(--border)}
+.fi-q{display:flex;justify-content:space-between;align-items:center;padding:1.35rem 0;cursor:pointer;gap:1rem}
+.fi-q span{font-size:.88rem;font-weight:500;color:rgba(255,255,255,.7);transition:color .3s;font-family:'Barlow',sans-serif}
+.fi-q:hover span{color:#fff}
+.fi-q i{color:var(--silver2);font-size:.7rem;transition:transform .35s;flex-shrink:0}
+.fi.open .fi-q i{transform:rotate(45deg)}
+.fi-a{max-height:0;overflow:hidden;transition:max-height .45s ease,padding .3s}
+.fi.open .fi-a{max-height:280px;padding-bottom:1.3rem}
+.fi-a p{font-size:.83rem;color:rgba(255,255,255,.38);line-height:1.9;font-weight:300}
+
+/* ═══ CONTACT ═══ */
+#contact{background:var(--bg)}
+.ct-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem}
+.cf input,.cf select,.cf textarea{width:100%;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);color:#fff;padding:.9rem 1rem;font-size:.87rem;font-family:'Barlow',sans-serif;outline:none;transition:border-color .3s;border-radius:1px;margin-bottom:1rem;-webkit-appearance:none;appearance:none}
+.cf input:focus,.cf select:focus,.cf textarea:focus{border-color:rgba(255,255,255,.22)}
+.cf select option{background:var(--surface2)}
+.cf textarea{height:115px;resize:vertical}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-ct{width:100%;background:#fff;color:#000;border:none;padding:.98rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:.3s;border-radius:1px}
+.btn-ct:hover{background:#d8d8d8}
+.cf-ok{display:none;margin-top:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);padding:1.1rem;text-align:center;font-size:.83rem;color:rgba(255,255,255,.6)}
+.ci h3{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.05em;margin-bottom:.9rem;line-height:1}
+.ci p{font-size:.85rem;color:rgba(255,255,255,.38);line-height:2;margin-bottom:2rem;font-weight:300}
+.ci-list{list-style:none;margin-bottom:2.2rem}
+.ci-list li{display:flex;align-items:center;gap:.9rem;padding:.7rem 0;border-bottom:1px solid var(--border);font-size:.83rem;color:rgba(255,255,255,.5)}
+.ci-list li i{color:var(--silver2);font-size:.78rem;width:14px;text-align:center}
+.snap-cta{display:flex;align-items:center;gap:.9rem;background:var(--snap);padding:1.1rem 1.5rem;cursor:pointer;transition:opacity .3s;border-radius:2px}
+.snap-cta:hover{opacity:.85}
+.snap-cta svg{width:26px;height:26px;flex-shrink:0}
+.snap-cta strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;color:#000;letter-spacing:.08em;text-transform:uppercase}
+.snap-cta small{font-size:.68rem;color:rgba(0,0,0,.5)}
+.map-box{height:260px;border:1px solid var(--border);overflow:hidden;margin-top:2rem}
+.map-box iframe{width:100%;height:100%;border:0;filter:invert(1) hue-rotate(180deg) brightness(.85) saturate(.7)}
+
+/* ═══ FOOTER ═══ */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:4.5rem 6% 2.5rem;position:relative;z-index:2;overflow:hidden}
+/* Race track start line at footer top */
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0,rgba(255,255,255,.07) 25px,transparent 25px,transparent 50px)}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:3.5rem;margin-bottom:3.5rem}
+.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;margin-bottom:1rem}
+.ft-logo span{color:rgba(255,255,255,.2)}
+.ft-logo small{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:600;letter-spacing:.5em;color:var(--silver2);margin-top:4px}
+.ft-brand p{font-size:.78rem;color:rgba(255,255,255,.25);line-height:1.9;font-weight:300}
+.ft-col h4{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--silver2);margin-bottom:1.3rem}
+.ft-col ul{list-style:none}
+.ft-col ul li{margin-bottom:.7rem}
+.ft-col ul li a{font-size:.8rem;color:rgba(255,255,255,.28);transition:color .3s}
+.ft-col ul li a:hover{color:#fff}
+.ft-snap{display:inline-flex;align-items:center;gap:.5rem;background:var(--snap);padding:.55rem .95rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#000;border-radius:2px;transition:opacity .3s;margin-top:.3rem}
+.ft-snap:hover{opacity:.82}
+.ft-snap svg{width:13px;height:13px}
+.ft-bot{padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.ft-bot p,.ft-bot a{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.15em;color:rgba(255,255,255,.18);transition:color .3s}
+.ft-bot a:hover{color:rgba(255,255,255,.5)}
+.ft-links{display:flex;gap:1.8rem}
+
+/* ═══ REVEAL ═══ */
+.rv-el{opacity:0;transform:translateY(22px);transition:opacity .75s,transform .75s var(--ease2)}
+.rv-el.vis{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ═══ RACING LINE DECORATOR ═══ */
+.rl-decor{position:absolute;pointer-events:none;overflow:hidden}
+.rl-decor svg{opacity:.05}
+
+/* ═══ GLOW LIGHT TRACE ═══ */
+@keyframes lightTrace{
+  0%{opacity:0;left:-10%}
+  5%{opacity:1}
+  95%{opacity:1}
+  100%{opacity:0;left:110%}
+}
+.light-trace{
+  position:absolute;height:1px;width:200px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+  pointer-events:none;z-index:3;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+  .resa-wrap,.ct-wrap{grid-template-columns:1fr;gap:3.5rem}
+  .ft-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .hdr-nav{display:none}
+  .burger{display:flex}
+  section{padding:5rem 5%}
+  .gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .gi:first-child{grid-column:span 2;height:230px}
+  .gi{height:170px}
+  .cf-row{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr}
+  .ft-bot{flex-direction:column;text-align:center}
+  .statbar-inner{gap:2rem;flex-wrap:wrap}
+  .stat-div{display:none}
+}
+@media(max-width:480px){
+  .gal-grid{grid-template-columns:1fr}
+  .gi:first-child{grid-column:span 1;height:200px}
+  .steps{grid-template-columns:1fr}
+  .fleet-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Global animated canvas -->
+<canvas id="race-canvas"></canvas>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div class="hdr-inner">
+    <a href="#" class="logo">
+      <span class="logo-main">BNB<span> Luxury</span>Cars</span>
+      <span class="logo-sub">Lyon — Premium &amp; Sport</span>
+    </a>
+    <nav class="hdr-nav">
+      <a href="#fleet">Flotte</a>
+      <a href="#reservation">Réserver</a>
+      <a href="#reviews">Avis</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="hdr-actions">
+      <a href="https://www.snapchat.com/@bnb-luxurycars" target="_blank" class="btn-snap">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.2 2C9.3 2 7.1 3.4 5.8 5.6c-.5.9-.6 1.8-.6 2.7v.6c-.6.1-1.2.1-1.7.4-.4.2-.7.5-.7.9 0 .5.4.9.9 1.1l.2.1c-.1.4-.2.8-.4 1.1C3.1 13 2.3 13.6 2 14.3c0 .4.3.7.7.8.5.1 1 .3 1.5.5.1.2.2.4.4.5.2.2.5.3.8.2.3-.1.7-.3 1.1-.4.5.7 1.3 1.3 2.3 1.7 1.1.4 2.1.5 3.3.5s2.2-.2 3.3-.5c1-.4 1.8-1 2.3-1.7.4.1.7.3 1.1.4.3.1.6 0 .8-.2.2-.1.3-.3.4-.5.5-.2 1-.4 1.5-.5.4-.1.7-.4.7-.8-.3-.7-1.1-1.3-1.5-1.9-.2-.3-.3-.7-.4-1.1l.2-.1c.5-.2.9-.6.9-1.1 0-.4-.3-.7-.7-.9-.5-.3-1.1-.3-1.7-.4v-.6c0-.9-.1-1.8-.6-2.7C17.1 3.4 14.9 2 12.2 2z"/></svg>
+        Snapchat
+      </a>
+      <a href="#reservation" class="btn-res">Réserver</a>
+      <div class="burger" id="burger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</header>
+
+<nav id="mnav">
+  <a href="#fleet" onclick="toggleNav()">Notre flotte</a>
+  <a href="#why" onclick="toggleNav()">Pourquoi nous</a>
+  <a href="#reservation" onclick="toggleNav()">Réservation</a>
+  <a href="#reviews" onclick="toggleNav()">Avis clients</a>
+  <a href="#contact" onclick="toggleNav()">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-grad2"></div>
+  <div class="speed-lines"></div>
+  <div class="hero-streak"></div>
+  <div class="hero-cnt">
+    <p class="hero-overline">Lyon — Agence de location premium</p>
+    <h1 class="hero-h1">
+      Vivez<br>
+      <span class="line2">la</span> performance<br>
+      <span class="line3">autrement</span>
+    </h1>
+    <p class="hero-sub">Audi RS3, RS4, RSQ8, Golf R — des machines d'exception disponibles dès aujourd'hui à Lyon, avec un service à la mesure de leur puissance.</p>
+    <div class="hero-pills">
+      <span class="pill"><i class="fa-solid fa-check"></i> Véhicules récents</span>
+      <span class="pill"><i class="fa-solid fa-shield-halved"></i> Assurance incluse</span>
+      <span class="pill"><i class="fa-solid fa-bolt"></i> Disponible 7j/7</span>
+      <span class="pill"><i class="fa-solid fa-location-dot"></i> Lyon & environs</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#reservation" class="hb-solid">Réserver maintenant</a>
+      <a href="#fleet" class="hb-ghost">Découvrir notre flotte</a>
+    </div>
+  </div>
+  <div class="start-line"><div class="start-line-inner" id="startLineBlocks"></div></div>
+  <div class="scroll-hint"><i class="fa-solid fa-chevron-down"></i><span>Scroll</span></div>
+</section>
+
+<!-- STAT BAR -->
+<div id="statbar">
+  <div class="speed-lines"></div>
+  <div class="statbar-inner">
+    <div class="stat-item rv-el"><div class="stat-n">4</div><div class="stat-l">Véhicules premium</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item rv-el d1"><div class="stat-n">600<span style="font-size:1.8rem;color:rgba(255,255,255,.3)">ch</span></div><div class="stat-l">Puissance max</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item rv-el d2"><div class="stat-n">7j/7</div><div class="stat-l">Disponibilité</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item rv-el d3"><div class="stat-n">100<span style="font-size:1.8rem;color:rgba(255,255,255,.3)">%</span></div><div class="stat-l">Satisfaction client</div></div>
+  </div>
+</div>
+
+<!-- FLEET -->
+<section id="fleet">
+  <div class="fleet-hdr rv-el">
+    <p class="lbl">Notre flotte</p>
+    <h2 class="sh">Des véhicules <em>d'exception</em></h2>
+    <p class="sd">Chaque modèle sélectionné pour sa puissance, son caractère et son prestige. Tous récents, tous impeccables.</p>
+  </div>
+  <div class="fleet-grid">
+
+    <!-- AUDI RS3 -->
+    <div class="car rv-el">
+      <div class="car-img-w">
+        <img id="img-rs3" src="https://mburgoscars.es/wp-content/uploads/2022/08/AUDI-RS3-Negro-MBurgosCARS-Madrid03-scaled.jpg" alt="Audi RS3">
+        <div class="price-tag">190 € / jour</div>
+      </div>
+      <div class="car-body">
+        <p class="car-badge">Audi Sport — Berline compacte</p>
+        <h3 class="car-name">Audi RS3</h3>
+        <p class="car-desc">400 chevaux dans un format compact. La RS3 allie agilité redoutable et puissance brute du 5 cylindres TFSI — un caractère incomparable.</p>
+        <div class="specs">
+          <div><p class="spec-l">Moteur</p><p class="spec-v">2.5L TFSI 5 cyl.</p></div>
+          <div><p class="spec-l">Puissance</p><p class="spec-v">400 ch</p></div>
+          <div><p class="spec-l">0 → 100 km/h</p><p class="spec-v">3.8 sec</p></div>
+          <div><p class="spec-l">Transmission</p><p class="spec-v">Quattro AWD</p></div>
+        </div>
+        <div class="sep"></div>
+        <a href="#reservation" class="btn-book" onclick="pre('rs3')">
+          <i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i>
+          Réserver ce véhicule
+        </a>
+      </div>
+    </div>
+
+    <!-- AUDI RS4 -->
+    <div class="car rv-el d1">
+      <div class="car-img-w">
+        <img id="img-rs4" src="https://tse4.mm.bing.net/th/id/OIP.3FUmLKiFA88p8lafZsSKswHaEK?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Audi RS4">
+        <div class="price-tag">230 € / jour</div>
+      </div>
+      <div class="car-body">
+        <p class="car-badge">Audi Sport — Break sportif</p>
+        <h3 class="car-name">Audi RS4</h3>
+        <p class="car-desc">La polyvalence poussée à l'extrême. Un break qui avale les kilomètres avec la férocité d'une sportive. Le choix des connaisseurs.</p>
+        <div class="specs">
+          <div><p class="spec-l">Moteur</p><p class="spec-v">2.9L V6 Biturbo</p></div>
+          <div><p class="spec-l">Puissance</p><p class="spec-v">450 ch</p></div>
+          <div><p class="spec-l">0 → 100 km/h</p><p class="spec-v">4.1 sec</p></div>
+          <div><p class="spec-l">Transmission</p><p class="spec-v">Quattro AWD</p></div>
+        </div>
+        <div class="sep"></div>
+        <a href="#reservation" class="btn-book" onclick="pre('rs4')">
+          <i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i>
+          Réserver ce véhicule
+        </a>
+      </div>
+    </div>
+
+    <!-- AUDI RSQ8 -->
+    <div class="car rv-el d2">
+      <div class="car-img-w">
+        <img id="img-rsq8" src="https://renty.ae/uploads/car/photo/l/white_audi-rsq_2021_4554_main_b4365cfd213bb76287a7ec583e4454fb.jpg" alt="Audi RSQ8">
+        <div class="price-tag">350 € / jour</div>
+      </div>
+      <div class="car-body">
+        <p class="car-badge">Audi Sport — SUV haute performance</p>
+        <h3 class="car-name">Audi RSQ8</h3>
+        <p class="car-desc">600 chevaux sous le capot d'un SUV de prestige. La RSQ8 redéfinit les limites du possible. Performance absolue, présence intimidante.</p>
+        <div class="specs">
+          <div><p class="spec-l">Moteur</p><p class="spec-v">4.0L V8 Biturbo</p></div>
+          <div><p class="spec-l">Puissance</p><p class="spec-v">600 ch</p></div>
+          <div><p class="spec-l">0 → 100 km/h</p><p class="spec-v">3.8 sec</p></div>
+          <div><p class="spec-l">Transmission</p><p class="spec-v">Quattro AWD</p></div>
+        </div>
+        <div class="sep"></div>
+        <a href="#reservation" class="btn-book" onclick="pre('rsq8')">
+          <i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i>
+          Réserver ce véhicule
+        </a>
+      </div>
+    </div>
+
+    <!-- VW GOLF R -->
+    <div class="car rv-el d3">
+      <div class="car-img-w">
+        <img id="img-golf" src="https://media.citizen.co.za/wp-content/uploads/2024/06/GolfR3.jpg" alt="Volkswagen Golf 8.5 R">
+        <div class="price-tag">170 € / jour</div>
+      </div>
+      <div class="car-body">
+        <p class="car-badge">Volkswagen R — Compacte sportive</p>
+        <h3 class="car-name">VW Golf 8.5 R</h3>
+        <p class="car-desc">L'icône revisitée. 333 chevaux dans le format le plus pratique. La Golf R est une référence absolue dans l'univers des compactes de performance.</p>
+        <div class="specs">
+          <div><p class="spec-l">Moteur</p><p class="spec-v">2.0L TSI</p></div>
+          <div><p class="spec-l">Puissance</p><p class="spec-v">333 ch</p></div>
+          <div><p class="spec-l">0 → 100 km/h</p><p class="spec-v">4.6 sec</p></div>
+          <div><p class="spec-l">Transmission</p><p class="spec-v">4Motion AWD</p></div>
+        </div>
+        <div class="sep"></div>
+        <a href="#reservation" class="btn-book" onclick="pre('golf')">
+          <i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i>
+          Réserver ce véhicule
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="rv-el">
+    <p class="lbl">Nos engagements</p>
+    <h2 class="sh">Pourquoi choisir <em>BNB LuxuryCars</em></h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-item rv-el">
+      <div class="wi-num">01</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <h3>Disponibilité 7j/7</h3>
+      <p>Notre équipe est disponible tous les jours pour vous accompagner dans votre réservation et votre prise en charge, sans exception.</p>
+    </div>
+    <div class="why-item rv-el d1">
+      <div class="wi-num">02</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <h3>Assurance incluse</h3>
+      <p>Chaque location inclut une couverture assurance complète tous risques. Roulez sereinement, sans frais cachés ni mauvaise surprise.</p>
+    </div>
+    <div class="why-item rv-el d2">
+      <div class="wi-num">03</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <h3>Réservation rapide</h3>
+      <p>Réservez en quelques minutes. Validation express et confirmation immédiate, prise en charge possible le jour même.</p>
+    </div>
+    <div class="why-item rv-el d3">
+      <div class="wi-num">04</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <h3>Service premium</h3>
+      <p>Un accompagnement personnalisé du début à la fin. Remise des clés soignée, véhicule impeccablement préparé et détaillé.</p>
+    </div>
+    <div class="why-item rv-el d1">
+      <div class="wi-num">05</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <h3>Flotte récente</h3>
+      <p>Tous nos modèles sont récents, parfaitement entretenus et préparés pour vous offrir la meilleure expérience possible.</p>
+    </div>
+    <div class="why-item rv-el d2">
+      <div class="wi-num">06</div>
+      <svg class="wi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <h3>Livraison à domicile</h3>
+      <p>Nous proposons la livraison directement à votre adresse sur Lyon et ses environs. L'expérience commence à votre porte.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="rv-el" style="text-align:center;max-width:560px;margin:0 auto">
+    <p class="lbl" style="justify-content:center">Comment louer</p>
+    <h2 class="sh" style="text-align:center">En 4 étapes <em>simples</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step rv-el">
+      <div class="step-n">01</div>
+      <div class="step-dot"></div>
+      <div class="step-ico"><i class="fa-solid fa-car"></i></div>
+      <h3>Choisissez</h3>
+      <p>Sélectionnez le véhicule qui correspond à votre envie parmi notre flotte sportive premium.</p>
+    </div>
+    <div class="step rv-el d1">
+      <div class="step-n">02</div>
+      <div class="step-dot"></div>
+      <div class="step-ico"><i class="fa-regular fa-calendar"></i></div>
+      <h3>Vos dates</h3>
+      <p>Indiquez vos dates de prise en charge et de restitution. Le tarif est calculé instantanément.</p>
+    </div>
+    <div class="step rv-el d2">
+      <div class="step-n">03</div>
+      <div class="step-dot"></div>
+      <div class="step-ico"><i class="fa-solid fa-bolt"></i></div>
+      <h3>Validation express</h3>
+      <p>Validation rapide de votre dossier. Confirmation et détails envoyés en quelques minutes.</p>
+    </div>
+    <div class="step rv-el d3">
+      <div class="step-n">04</div>
+      <div class="step-dot"></div>
+      <div class="step-ico"><i class="fa-solid fa-flag-checkered"></i></div>
+      <h3>Prenez le volant</h3>
+      <p>Récupérez votre véhicule, impeccablement préparé. L'expérience commence ici.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gal-hdr rv-el">
+    <p class="lbl">Galerie</p>
+    <h2 class="sh">Nos véhicules <em>en images</em></h2>
+  </div>
+  <div class="gal-grid">
+    <div class="gi rv-el" onclick="lb(this)">
+      <img id="g1" src="https://renty.ae/uploads/car/photo/l/white_audi-rsq_2021_4554_main_b4365cfd213bb76287a7ec583e4454fb.jpg" alt="Audi RSQ8">
+      <div class="gi-ov"><i class="fa-solid fa-expand"></i></div>
+      <span class="gi-lbl">RSQ8 — 600 ch</span>
+    </div>
+    <div class="gi rv-el d1" onclick="lb(this)">
+      <img id="g2" src="https://mburgoscars.es/wp-content/uploads/2022/08/AUDI-RS3-Negro-MBurgosCARS-Madrid03-scaled.jpg" alt="Audi RS3">
+      <div class="gi-ov"><i class="fa-solid fa-expand"></i></div>
+      <span class="gi-lbl">RS3 — 400 ch</span>
+    </div>
+    <div class="gi rv-el d2" onclick="lb(this)">
+      <img id="g3" src="https://media.citizen.co.za/wp-content/uploads/2024/06/GolfR3.jpg" alt="Golf R">
+      <div class="gi-ov"><i class="fa-solid fa-expand"></i></div>
+      <span class="gi-lbl">Golf R — 333 ch</span>
+    </div>
+    <div class="gi rv-el d1" onclick="lb(this)">
+      <img id="g4" src="https://tse4.mm.bing.net/th/id/OIP.3FUmLKiFA88p8lafZsSKswHaEK?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Audi RS4">
+      <div class="gi-ov"><i class="fa-solid fa-expand"></i></div>
+      <span class="gi-lbl">RS4 — 450 ch</span>
+    </div>
+  </div>
+</section>
+<div id="lb"><button id="lb-x" onclick="clb()"><i class="fa-solid fa-xmark"></i></button><img id="lb-i" src="" alt=""></div>
+
+<!-- RESERVATION -->
+<section id="reservation">
+  <div class="resa-wrap">
+    <div class="rv-el">
+      <p class="lbl">Réservation</p>
+      <h2 class="sh">Réservez <em>en ligne</em></h2>
+      <p class="sd">Sélectionnez votre véhicule et vos dates pour un devis instantané. Confirmation sous 24h.</p>
+      <div class="price-table" style="margin-top:2.5rem">
+        <div class="pt-row"><span>Audi RS3</span><span>190 € / jour</span></div>
+        <div class="pt-row"><span>Audi RS4</span><span>230 € / jour</span></div>
+        <div class="pt-row"><span>Audi RSQ8</span><span>350 € / jour</span></div>
+        <div class="pt-row"><span>VW Golf 8.5 R</span><span>170 € / jour</span></div>
+      </div>
+    </div>
+    <div class="rv-el d1">
+      <div class="resa-box">
+        <div class="fg">
+          <label>Véhicule souhaité</label>
+          <select id="rv" onchange="calc()">
+            <option value="">— Sélectionnez —</option>
+            <option value="rs3">Audi RS3 — 190 €/j</option>
+            <option value="rs4">Audi RS4 — 230 €/j</option>
+            <option value="rsq8">Audi RSQ8 — 350 €/j</option>
+            <option value="golf">VW Golf 8.5 R — 170 €/j</option>
+          </select>
+        </div>
+        <div class="fg"><label>Date de début</label><input type="date" id="rd" onchange="calc()"></div>
+        <div class="fg"><label>Date de fin</label><input type="date" id="rf" onchange="calc()"></div>
+        <div class="resa-sum">
+          <h4>Votre estimation</h4>
+          <div class="sum-row"><span>Véhicule</span><span id="sv">—</span></div>
+          <div class="sum-row"><span>Durée</span><span id="sd2">—</span></div>
+          <div class="sum-row"><span>Total estimé</span><span id="st">—</span></div>
+        </div>
+        <button class="btn-resa" onclick="sendR()">Confirmer ma réservation</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="rv-el">
+    <p class="lbl">Avis clients</p>
+    <h2 class="sh">Ce que disent <em>nos clients</em></h2>
+  </div>
+  <div class="rv-grid">
+    <div class="rv rv-el"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"Une expérience absolument impeccable. La RS3 était en parfait état, remise dans les temps. Le service est vraiment à la hauteur du niveau premium affiché."</p><div class="rv-auth"><div class="rv-av">TM</div><div><p class="rv-name">Thomas M.</p><p class="rv-car">Audi RS3</p></div></div></div>
+    <div class="rv rv-el d1"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"La RSQ8 est un monstre sur route. Livraison ponctuelle, équipe très professionnelle, véhicule immaculé. Je recommande sans hésitation."</p><div class="rv-auth"><div class="rv-av">JL</div><div><p class="rv-name">Julie L.</p><p class="rv-car">Audi RSQ8</p></div></div></div>
+    <div class="rv rv-el d2"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"Golf R pour un week-end dans les Alpes. Un plaisir de conduite incomparable. La réservation confirmée en moins d'une heure, service irréprochable."</p><div class="rv-auth"><div class="rv-av">AR</div><div><p class="rv-name">Antoine R.</p><p class="rv-car">VW Golf 8.5 R</p></div></div></div>
+    <div class="rv rv-el"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"RS4 pour 3 jours, c'est simplement magique. BNB LuxuryCars offre un niveau de service qu'on trouve rarement dans la location automobile."</p><div class="rv-auth"><div class="rv-av">SC</div><div><p class="rv-name">Sophie C.</p><p class="rv-car">Audi RS4</p></div></div></div>
+    <div class="rv rv-el d1"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"Troisième location chez BNB et toujours aussi satisfait. La qualité des véhicules et l'accueil sont constants. Ma référence à Lyon."</p><div class="rv-auth"><div class="rv-av">KD</div><div><p class="rv-name">Kevin D.</p><p class="rv-car">Audi RS3</p></div></div></div>
+    <div class="rv rv-el d2"><div class="rv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="rv-txt">"RSQ8 pour un mariage. Présence exceptionnelle, confort royal. L'équipe a préparé le véhicule avec une attention remarquable. Une adresse incontournable."</p><div class="rv-auth"><div class="rv-av">MB</div><div><p class="rv-name">Marie B.</p><p class="rv-car">Audi RSQ8</p></div></div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="rv-el">
+    <p class="lbl">Questions fréquentes</p>
+    <h2 class="sh">Tout ce que vous <em>devez savoir</em></h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="fi rv-el"><div class="fi-q" onclick="tFaq(this)"><span>Quel est l'âge minimum pour louer un véhicule ?</span><i class="fa-solid fa-plus"></i></div><div class="fi-a"><p>L'âge minimum requis est de 21 ans, avec au minimum 2 ans de permis de conduire. Pour certains modèles à haute puissance, une expérience de conduite supplémentaire peut être demandée.</p></div></div>
+    <div class="fi rv-el"><div class="fi-q" onclick="tFaq(this)"><span>Une caution est-elle demandée lors de la location ?</span><i class="fa-solid fa-plus"></i></div><div class="fi-a"><p>Oui, une caution est demandée par empreinte bancaire à la remise des clés. Son montant varie selon le véhicule loué. Elle est intégralement libérée à la restitution du véhicule en bon état.</p></div></div>
+    <div class="fi rv-el"><div class="fi-q" onclick="tFaq(this)"><span>L'assurance est-elle incluse dans le tarif de location ?</span><i class="fa-solid fa-plus"></i></div><div class="fi-a"><p>Oui, l'assurance tous risques est incluse dans chaque location. Vous roulez en toute sérénité, sans franchise cachée ni supplément à prévoir. Les détails de couverture vous sont remis à la signature.</p></div></div>
+    <div class="fi rv-el"><div class="fi-q" onclick="tFaq(this)"><span>Proposez-vous la livraison du véhicule à domicile ?</span><i class="fa-solid fa-plus"></i></div><div class="fi-a"><p>Oui, nous proposons un service de livraison et de récupération à domicile sur Lyon et ses environs. Ce service est disponible sur demande et peut faire l'objet de frais supplémentaires selon la distance.</p></div></div>
+    <div class="fi rv-el"><div class="fi-q" onclick="tFaq(this)"><span>Quels moyens de paiement acceptez-vous ?</span><i class="fa-solid fa-plus"></i></div><div class="fi-a"><p>Nous acceptons les paiements par carte bancaire (Visa, Mastercard, American Express) ainsi que par virement bancaire. Le règlement s'effectue à la remise des clés ou en ligne lors de la confirmation.</p></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="ct-wrap">
+    <div>
+      <p class="lbl rv-el">Contact</p>
+      <h2 class="sh rv-el">Parlons de <em>votre projet</em></h2>
+      <div class="cf rv-el d1">
+        <div class="cf-row">
+          <input type="text" id="cn" placeholder="Nom complet">
+          <input type="tel" id="ct" placeholder="Téléphone">
+        </div>
+        <input type="email" id="ce" placeholder="Adresse email">
+        <select id="cv"><option value="">Véhicule souhaité</option><option>Audi RS3</option><option>Audi RS4</option><option>Audi RSQ8</option><option>VW Golf 8.5 R</option></select>
+        <input type="date" id="cdt">
+        <textarea id="cm" placeholder="Votre message..."></textarea>
+        <button class="btn-ct" onclick="sendC()">Envoyer ma demande</button>
+        <div class="cf-ok" id="cok"><i class="fa-solid fa-circle-check"></i> Votre message a bien été envoyé. Nous vous répondrons rapidement.</div>
+      </div>
+    </div>
+    <div class="ci rv-el d2">
+      <h3>BNB LuxuryCars</h3>
+      <p>Notre équipe est disponible 7j/7 pour répondre à vos questions et organiser votre location dans les meilleures conditions.</p>
+      <ul class="ci-list">
+        <li><i class="fa-solid fa-location-dot"></i> Lyon, France</li>
+        <li><i class="fa-solid fa-clock"></i> Disponible 7 jours sur 7</li>
+        <li><i class="fa-brands fa-snapchat"></i> @bnb-luxurycars</li>
+      </ul>
+      <a href="https://www.snapchat.com/@bnb-luxurycars" target="_blank" class="snap-cta">
+        <svg viewBox="0 0 24 24" fill="#000"><path d="M12.2 2C9.3 2 7.1 3.4 5.8 5.6c-.5.9-.6 1.8-.6 2.7v.6c-.6.1-1.2.1-1.7.4-.4.2-.7.5-.7.9 0 .5.4.9.9 1.1l.2.1c-.1.4-.2.8-.4 1.1C3.1 13 2.3 13.6 2 14.3c0 .4.3.7.7.8.5.1 1 .3 1.5.5.1.2.2.4.4.5.2.2.5.3.8.2.3-.1.7-.3 1.1-.4.5.7 1.3 1.3 2.3 1.7 1.1.4 2.1.5 3.3.5s2.2-.2 3.3-.5c1-.4 1.8-1 2.3-1.7.4.1.7.3 1.1.4.3.1.6 0 .8-.2.2-.1.3-.3.4-.5.5-.2 1-.4 1.5-.5.4-.1.7-.4.7-.8-.3-.7-1.1-1.3-1.5-1.9-.2-.3-.3-.7-.4-1.1l.2-.1c.5-.2.9-.6.9-1.1 0-.4-.3-.7-.7-.9-.5-.3-1.1-.3-1.7-.4v-.6c0-.9-.1-1.8-.6-2.7C17.1 3.4 14.9 2 12.2 2z"/></svg>
+        <div><strong>Snapchat BNB LuxuryCars</strong><small>@bnb-luxurycars</small></div>
+      </a>
+      <div class="map-box"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d89004.55449843455!2d4.7765776!3d45.7676013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f4ea516ae922e1%3A0x408ab2ae4bb21f0!2sLyon!5e0!3m2!1sfr!2sfr!4v1680000000000" allowfullscreen="" loading="lazy" title="Lyon"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div class="ft-brand">
+      <div class="ft-logo">BNB<span>Luxury</span>Cars<small>Lyon — Premium &amp; Sport</small></div>
+      <p>Agence de location de véhicules sportifs et premium à Lyon. Service haut de gamme, disponibilité 7j/7, flotte Audi RS et Golf R.</p>
+    </div>
+    <div class="ft-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#fleet">Notre flotte</a></li>
+        <li><a href="#why">Pourquoi nous</a></li>
+        <li><a href="#reservation">Réservation</a></li>
+        <li><a href="#reviews">Avis clients</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Véhicules</h4>
+      <ul>
+        <li><a href="#fleet">Audi RS3 — 190 €/j</a></li>
+        <li><a href="#fleet">Audi RS4 — 230 €/j</a></li>
+        <li><a href="#fleet">Audi RSQ8 — 350 €/j</a></li>
+        <li><a href="#fleet">VW Golf 8.5 R — 170 €/j</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Nous suivre</h4>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.28);margin-bottom:.9rem;font-weight:300;line-height:1.8">Retrouvez-nous sur Snapchat pour nos disponibilités en temps réel.</p>
+      <a href="https://www.snapchat.com/@bnb-luxurycars" target="_blank" class="ft-snap">
+        <svg viewBox="0 0 24 24" fill="#000"><path d="M12.2 2C9.3 2 7.1 3.4 5.8 5.6c-.5.9-.6 1.8-.6 2.7v.6c-.6.1-1.2.1-1.7.4-.4.2-.7.5-.7.9 0 .5.4.9.9 1.1l.2.1c-.1.4-.2.8-.4 1.1C3.1 13 2.3 13.6 2 14.3c0 .4.3.7.7.8.5.1 1 .3 1.5.5.1.2.2.4.4.5.2.2.5.3.8.2.3-.1.7-.3 1.1-.4.5.7 1.3 1.3 2.3 1.7 1.1.4 2.1.5 3.3.5s2.2-.2 3.3-.5c1-.4 1.8-1 2.3-1.7.4.1.7.3 1.1.4.3.1.6 0 .8-.2.2-.1.3-.3.4-.5.5-.2 1-.4 1.5-.5.4-.1.7-.4.7-.8-.3-.7-1.1-1.3-1.5-1.9-.2-.3-.3-.7-.4-1.1l.2-.1c.5-.2.9-.6.9-1.1 0-.4-.3-.7-.7-.9-.5-.3-1.1-.3-1.7-.4v-.6c0-.9-.1-1.8-.6-2.7C17.1 3.4 14.9 2 12.2 2z"/></svg>
+        Snapchat
+      </a>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <p>&copy; 2025 BNB LuxuryCars. Tous droits réservés.</p>
+    <div class="ft-links"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
+  </div>
+</footer>
+
+<script>
+// ── INIT ──
+window.addEventListener('load', () => {
+  document.getElementById('hero').classList.add('rdy');
+  buildStartLine();
+  initCanvas();
+  initLightTraces();
+});
+
+// ── START LINE BLOCKS ──
+function buildStartLine(){
+  const c = document.getElementById('startLineBlocks');
+  const n = Math.ceil(window.innerWidth / 20);
+  for(let i=0; i<n; i++){
+    const b = document.createElement('div');
+    b.className = 'start-block';
+    c.appendChild(b);
+  }
+}
+
+// ── ANIMATED RACE CANVAS (subtle speed lines + tyre marks) ──
+function initCanvas(){
+  const canvas = document.getElementById('race-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Generate subtle diagonal speed streaks
+  const streaks = Array.from({length: 18}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    len: 40 + Math.random() * 180,
+    speed: 0.08 + Math.random() * 0.25,
+    opacity: 0.012 + Math.random() * 0.025,
+    angle: -0.08 + Math.random() * 0.05,
+    width: 0.5 + Math.random() * 1.5,
+  }));
+
+  // Subtle tyre track curves (bezier arcs)
+  const tracks = Array.from({length: 4}, (_, i) => ({
+    startX: (W * (i * 0.28)) % W,
+    startY: H * 0.2 + Math.random() * H * 0.6,
+    cp1x: Math.random() * W,
+    cp1y: Math.random() * H,
+    cp2x: Math.random() * W,
+    cp2y: Math.random() * H,
+    endX: (W * ((i+1) * 0.28)) % W,
+    endY: H * 0.2 + Math.random() * H * 0.6,
+    opacity: 0.018,
+  }));
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw tyre tracks
+    tracks.forEach(t => {
+      ctx.beginPath();
+      ctx.moveTo(t.startX, t.startY);
+      ctx.bezierCurveTo(t.cp1x, t.cp1y, t.cp2x, t.cp2y, t.endX, t.endY);
+      ctx.strokeStyle = `rgba(255,255,255,${t.opacity})`;
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([3, 12]);
+      ctx.lineDashOffset = performance.now() * 0.015;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Draw speed streaks
+    streaks.forEach(s => {
+      const ex = s.x + Math.cos(s.angle) * s.len;
+      const ey = s.y + Math.sin(s.angle) * s.len;
+      const grad = ctx.createLinearGradient(s.x, s.y, ex, ey);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.5, `rgba(255,255,255,${s.opacity})`);
+      grad.addColorStop(1, `rgba(255,255,255,0)`);
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = s.width;
+      ctx.stroke();
+      
+      // Drift slowly
+      s.x += s.speed;
+      s.y -= s.speed * 0.15;
+      if(s.x > W + 200) { s.x = -200; s.y = Math.random() * H; }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── PERIODIC LIGHT TRACES on sections ──
+function initLightTraces(){
+  const sections = document.querySelectorAll('section, #statbar');
+  sections.forEach(sec => {
+    if(getComputedStyle(sec).position === 'static'){
+      sec.style.position = 'relative';
+    }
+    sec.style.overflow = 'hidden';
+    
+    function spawnTrace(){
+      const t = document.createElement('div');
+      t.className = 'light-trace';
+      const topPct = 10 + Math.random() * 80;
+      t.style.top = topPct + '%';
+      t.style.left = '-210px';
+      t.style.opacity = '0';
+      t.style.width = (100 + Math.random() * 180) + 'px';
+      t.style.animation = `lightTrace ${6 + Math.random() * 8}s linear forwards`;
+      sec.appendChild(t);
+      setTimeout(() => t.remove(), 14000);
+    }
+    
+    // Spawn traces periodically
+    const interval = 4000 + Math.random() * 8000;
+    setInterval(spawnTrace, interval);
+  });
+}
+
+// ── HEADER SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('hdr').classList.toggle('solid', scrollY > 50);
+});
+
+// ── MOBILE NAV ──
+function toggleNav(){ document.getElementById('mnav').classList.toggle('on'); }
+
+// ── SCROLL REVEAL ──
+const obs = new IntersectionObserver(en => en.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); }
+}), {threshold: .1});
+document.querySelectorAll('.rv-el').forEach(el => obs.observe(el));
+
+// ── FAQ ──
+function tFaq(btn){
+  const fi = btn.parentElement;
+  document.querySelectorAll('.fi').forEach(f => { if(f !== fi) f.classList.remove('open'); });
+  fi.classList.toggle('open');
+}
+
+// ── LIGHTBOX ──
+function lb(gi){ document.getElementById('lb-i').src = gi.querySelector('img').src; document.getElementById('lb').classList.add('on'); document.body.style.overflow='hidden'; }
+function clb(){ document.getElementById('lb').classList.remove('on'); document.body.style.overflow=''; }
+document.getElementById('lb').addEventListener('click', function(e){ if(e.target === this) clb(); });
+
+// ── RESERVATION ──
+const P = {rs3:190, rs4:230, rsq8:350, golf:170};
+const N = {rs3:'Audi RS3', rs4:'Audi RS4', rsq8:'Audi RSQ8', golf:'VW Golf 8.5 R'};
+function calc(){
+  const v = document.getElementById('rv').value;
+  const d = document.getElementById('rd').value;
+  const f = document.getElementById('rf').value;
+  document.getElementById('sv').textContent = v ? N[v] : '—';
+  if(v && d && f){
+    const days = Math.ceil((new Date(f) - new Date(d)) / 86400000);
+    if(days > 0){
+      document.getElementById('sd2').textContent = days + ' jour' + (days > 1 ? 's' : '');
+      document.getElementById('st').textContent = (days * P[v]).toLocaleString('fr-FR') + ' €';
+    } else { reset(); }
+  }
+}
+function reset(){ document.getElementById('sd2').textContent = '—'; document.getElementById('st').textContent = '—'; }
+function pre(v){ document.getElementById('rv').value = v; calc(); setTimeout(() => document.getElementById('reservation').scrollIntoView({behavior:'smooth'}), 80); }
+function sendR(){
+  const v = document.getElementById('rv').value;
+  const d = document.getElementById('rd').value;
+  const f = document.getElementById('rf').value;
+  if(!v || !d || !f){ alert('Veuillez remplir tous les champs.'); return; }
+  const days = Math.ceil((new Date(f) - new Date(d)) / 86400000);
+  if(days <= 0){ alert('Dates invalides.'); return; }
+  alert('Demande envoyée pour la ' + N[v] + ' — ' + days + ' jour' + (days > 1 ? 's' : '') + '. Confirmation sous peu.');
+}
+
+// ── CONTACT ──
+function sendC(){
+  const n = document.getElementById('cn').value.trim();
+  const e = document.getElementById('ce').value.trim();
+  const m = document.getElementById('cm').value.trim();
+  if(!n || !e || !m){ alert('Veuillez remplir au minimum nom, email et message.'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){ alert('Email invalide.'); return; }
+  document.getElementById('cok').style.display = 'block';
+  document.getElementById('cn').value = ''; document.getElementById('ct').value = '';
+  document.getElementById('ce').value = ''; document.getElementById('cm').value = '';
+}
+
+// ── DATE MIN ──
+const td = new Date().toISOString().split('T')[0];
+['rd','rf','cdt'].forEach(id => { const el = document.getElementById(id); if(el) el.min = td; });
+</script>
+</body>
+</html>
